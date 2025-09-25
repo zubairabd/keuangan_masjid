@@ -44,7 +44,7 @@ Buat database baru:
 ```
 CREATE DATABASE db_keuangan_masjid;
 ```
-Hubungkan ke database tersebut (\c db_keuangan_masjid) dan jalankan skrip SQL di bawah ini untuk membuat semua tabel yang dibutuhkan:
+Hubungkan ke database tersebut (``` \c db_keuangan_masjid ```) dan jalankan skrip SQL di bawah ini untuk membuat semua tabel yang dibutuhkan:
 ```
 CREATE TABLE transaksi (
     id SERIAL PRIMARY KEY,
@@ -69,8 +69,8 @@ CREATE TABLE kegiatan (
 );
 ```
 ### 4. Konfigurasi Environment
-1. Buat file baru di folder utama proyek bernama .env.
-2. Salin konten di bawah ini ke dalam file .env dan sesuaikan dengan konfigurasi lokal Anda, terutama DB_PASSWORD.
+1. Buat file baru di folder utama proyek bernama ``` .env ```.
+2. Salin konten di bawah ini ke dalam file ``` .env ``` dan sesuaikan dengan konfigurasi lokal Anda, terutama ``` DB_PASSWORD ```.
 ```
 # Konfigurasi Database
 DB_USER=postgres
@@ -85,8 +85,11 @@ ADMIN_USERNAME=admin
 ADMIN_PASSWORD=password123
 ```
 ### 5. Jalankan Server
-Setelah semua konfigurasi selesai, jalankan server backend dengan perintah:node server.js
-Server akan berjalan di http://localhost:3000.
+Setelah semua konfigurasi selesai, jalankan server backend dengan perintah:
+```
+node server.js
+```
+Server akan berjalan di ``` http://localhost:3000 ```.
 ### 6. Akses Aplikas
-Halaman Login Admin: Buka file login.html di browser Anda.Halaman Publik: Buka file user-view.html di browser.
+Halaman Login Admin: Buka file ``` login.html ``` di browser Anda.Halaman Publik: Buka file ``` user-view.html ``` di browser.
 ### 📝 Lisensi & KreditDibuat dengan ❤️ oleh @elinf_zub © 2025.
