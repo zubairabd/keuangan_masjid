@@ -1,11 +1,39 @@
 # Sistem Informasi Manajemen Masjid (PIMM)
 PIMM adalah aplikasi web lengkap yang dirancang untuk membantu pengurus masjid (DKM) dalam mengelola operasional masjid secara digital dan transparan. Aplikasi ini mencakup manajemen keuangan, penjadwalan program kegiatan, dan menyediakan laporan yang dapat diakses oleh jamaah.
 ## ✨ Fitur Utama
-Aplikasi ini dibagi menjadi dua bagian utama: Halaman Admin yang aman dan Halaman Publik yang informatif.Halaman Admin (Dasbor)🔐 Sistem Login Aman: Menggunakan otentikasi berbasis JSON Web Token (JWT).⏳ Session Timeout: Admin akan otomatis logout setelah 15 menit tidak ada aktivitas untuk keamanan.📊 Dasbor Multi-Menu: Navigasi menggunakan sidebar untuk beralih antara modul Keuangan dan Kegiatan.💰 Manajemen Keuangan:Operasi CRUD (Tambah, Edit, Hapus) untuk semua transaksi.📸 Upload Bukti Foto untuk setiap transaksi sebagai bukti akuntabilitas.🔍 Filter Transaksi berdasarkan tahun, bulan, jenis, dan kategori.📈 Grafik Dinamis: Visualisasi pemasukan dan pengeluaran bulanan yang interaktif dan mengikuti filter.🖨️ Cetak Laporan: Mencetak laporan keuangan yang rapi sesuai dengan filter yang sedang aktif.🗓️ Manajemen Program Kegiatan:Operasi CRUD (Tambah, Edit, Hapus) untuk semua jadwal kegiatan masjid.Mencatat detail seperti nama acara, tanggal, waktu, pembicara, dan keterangan.Halaman Publik (Jamaah)🔒 Read-Only: Tampilan yang aman, hanya untuk melihat data tanpa bisa mengubahnya.🧾 Laporan Keuangan Transparan: Menampilkan ringkasan saldo dan daftar semua transaksi.🔎 Filter Laporan Canggih: Jamaah dapat memfilter laporan keuangan berdasarkan tahun, bulan, jenis (pemasukan/pengeluaran), dan kategori.📄 Lihat Bukti: Terdapat tautan untuk melihat bukti foto dari setiap transaksi.💻 Teknologi yang DigunakanProyek ini dibangun menggunakan teknologi modern dan standar industri.BagianTeknologiBackendDatabaseFrontendLainnya🚀 Panduan Instalasi & MenjalankanBerikut adalah langkah-langkah untuk menjalankan proyek ini di lingkungan lokal.PrasyaratNode.js (v18 atau lebih baru)PostgreSQL
-1. Clone Repositorygit clone [https://github.com/username-anda/nama-repository.git](https://github.com/username-anda/nama-repository.git)
-cd nama-repository
-2. Install Dependensi BackendBuka terminal di folder proyek dan jalankan:npm install
-3. Konfigurasi DatabaseBuka psql atau alat bantu database Anda.Buat database baru:CREATE DATABASE db_keuangan_masjid;
+Aplikasi ini dibagi menjadi dua bagian utama: Halaman Admin yang aman dan Halaman Publik yang informatif.
+### Halaman Admin (Dasbor)
+- 🔐 Sistem Login Aman: Menggunakan otentikasi berbasis JSON Web Token (JWT).
+- ⏳ Session Timeout: Admin akan otomatis logout setelah 15 menit tidak ada aktivitas untuk keamanan.
+- 📊 Dasbor Multi-Menu: Navigasi menggunakan sidebar untuk beralih antara modul Keuangan dan Kegiatan.
+- 💰 Manajemen Keuangan:
+- Operasi CRUD (Tambah, Edit, Hapus) untuk semua transaksi.
+- 📸 Upload Bukti Foto untuk setiap transaksi sebagai bukti akuntabilitas.
+- 🔍 Filter Transaksi berdasarkan tahun, bulan, jenis, dan kategori.
+- 📈 Grafik Dinamis: Visualisasi pemasukan dan pengeluaran bulanan yang interaktif dan mengikuti filter.
+- 🖨️ Cetak Laporan: Mencetak laporan keuangan yang rapi sesuai dengan filter yang sedang aktif.
+- 🗓️ Manajemen Program Kegiatan:
+- Operasi CRUD (Tambah, Edit, Hapus) untuk semua jadwal kegiatan masjid.
+- Mencatat detail seperti nama acara, tanggal, waktu, pembicara, dan keterangan.
+## Halaman Publik (Jamaah)
+- 🔒 Read-Only: Tampilan yang aman, hanya untuk melihat data tanpa bisa mengubahnya.
+- 🧾 Laporan Keuangan Transparan: Menampilkan ringkasan saldo dan daftar semua transaksi.
+- 🔎 Filter Laporan Canggih: Jamaah dapat memfilter laporan keuangan berdasarkan tahun, bulan, jenis (pemasukan/pengeluaran), dan kategori.
+- 📄 Lihat Bukti: Terdapat tautan untuk melihat bukti foto dari setiap transaksi.
+## 💻 Teknologi yang Digunakan
+Proyek ini dibangun menggunakan teknologi modern dan standar industri.
+BagianTeknologiBackendDatabaseFrontendLainnya
+## 🚀 Panduan Instalasi & Menjalankan
+Berikut adalah langkah-langkah untuk menjalankan proyek ini di lingkungan lokal.
+### Prasyarat
+- Node.js (v18 atau lebih baru)
+- PostgreSQL
+### 1. Clone Repository
+ ``` git clone [https://github.com/username-anda/nama-repository.git](https://github.com/username-anda/nama-repository.git)
+cd nama-repository ```
+### 2.Install Dependensi Backend
+Buka terminal di folder proyek dan jalankan:npm install
+4. Konfigurasi DatabaseBuka psql atau alat bantu database Anda.Buat database baru:CREATE DATABASE db_keuangan_masjid;
 Hubungkan ke database tersebut (\c db_keuangan_masjid) dan jalankan skrip SQL di bawah ini untuk membuat semua tabel yang dibutuhkan:CREATE TABLE transaksi (
     id SERIAL PRIMARY KEY,
     tanggal DATE NOT NULL DEFAULT CURRENT_DATE,
