@@ -24,7 +24,7 @@ Aplikasi ini dibagi menjadi dua bagian utama: Halaman Admin yang aman dan Halama
 Proyek ini dibangun menggunakan teknologi modern dan standar industri.
 - Backend
    ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
-  [JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+  ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 
 - Database
    ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
@@ -38,7 +38,7 @@ Berikut adalah langkah-langkah untuk menjalankan proyek ini di lingkungan lokal.
 - Node.js (v18 atau lebih baru)
 - PostgreSQL
 ### 1. Clone Repository
-git clone [https://github.com/username-anda/nama-repository.git](https://github.com/username-anda/nama-repository.git)
+git clone [https://github.com/zubairabd/keuangan_masjid.git](https://github.com/zubairabd/keuangan_masjid.git)
 ```
 cd nama-repository
  ```
@@ -99,6 +99,8 @@ Setelah semua konfigurasi selesai, jalankan server backend dengan perintah:
 node server.js
 ```
 Server akan berjalan di ``` http://localhost:3000 ```.
-### 6. Akses Aplikas
+### 6. Akses Aplikasi
 Halaman Login Admin: Buka file ``` login.html ``` di browser Anda.Halaman Publik: Buka file ``` user-view.html ``` di browser.
+### 7. Testing
+Copy (https://github.com/zubairabd/keuangan_masjid/SHOWCASE.html)
 ### 📝 Lisensi & KreditDibuat dengan ❤️ oleh @elinf_zub © 2025.
