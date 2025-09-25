@@ -1,0 +1,15 @@
+# Abaikan folder dependensi Node.js
+/node_modules
+
+# Abaikan file environment variables yang berisi rahasia
+.env
+
+# Abaikan folder berisi file yang di-upload oleh user
+/uploads
+
+# Abaikan file log
+*.log
+
+# Abaikan file sistem operasi
+.DS_Store
+Thumbs.db

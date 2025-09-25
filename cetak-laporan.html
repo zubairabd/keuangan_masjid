@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Keuangan Masjid</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        @media print {
+            .no-print { display: none; }
+            table, thead, tbody, th, td, tr { border-color: #e5e7eb !important; }
+            th { background-color: #f9fafb !important; }
+            .text-green-600 { color: #16a34a !important; }
+            .text-red-600 { color: #dc2626 !important; }
+            .text-blue-600 { color: #2563eb !important; }
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <div class="container mx-auto p-8">
+        <header class="text-center mb-8 border-b-2 pb-4 border-gray-800">
+            <h1 class="text-3xl font-bold text-gray-800">Laporan Keuangan Masjid</h1>
+            <p id="report-period" class="text-gray-600 mt-2">Memuat Laporan...</p>
+        </header>
+
+        <!-- Ringkasan Saldo -->
+        <div id="summary" class="grid grid-cols-3 gap-6 mb-8">
+            <div class="border p-4 rounded-lg text-center">
+                <h3 class="text-lg font-semibold text-gray-500">Total Pemasukan</h3>
+                <p id="total-pemasukan" class="text-xl font-bold text-green-600 mt-2 whitespace-nowrap">Rp 0</p>
+            </div>
+            <div class="border p-4 rounded-lg text-center">
+                <h3 class="text-lg font-semibold text-gray-500">Total Pengeluaran</h3>
+                <p id="total-pengeluaran" class="text-xl font-bold text-red-600 mt-2 whitespace-nowrap">Rp 0</p>
+            </div>
+            <div class="border p-4 rounded-lg text-center">
+                <h3 class="text-lg font-semibold text-gray-500">Saldo Akhir</h3>
+                <p id="saldo-akhir" class="text-xl font-bold text-blue-600 mt-2 whitespace-nowrap">Rp 0</p>
+            </div>
+        </div>
+
+        <!-- Tabel Transaksi -->
+        <div>
+            <table class="min-w-full divide-y divide-gray-200 border">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Tanggal</th>
+                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Keterangan</th>
+                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Kategori</th>
+                        <th class="px-4 py-2 text-right text-sm font-semibold text-gray-600">Pemasukan (Rp)</th>
+                        <th class="px-4 py-2 text-right text-sm font-semibold text-gray-600">Pengeluaran (Rp)</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction-table-body" class="bg-white divide-y divide-gray-200">
+                    <!-- Data akan diisi oleh JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-12 text-center text-gray-500 no-print">
+            <p>Halaman ini akan otomatis menampilkan dialog cetak. Jika tidak, tekan Ctrl+P atau Cmd+P.</p>
+        </div>
+    </div>
+
+    <script>
+        const authToken = sessionStorage.getItem('authToken');
+        if (!authToken) {
+            window.alert('Akses ditolak. Anda harus login sebagai admin.');
+            window.close();
+        } else {
+            const API_BASE_URL = 'http://localhost:3000';
+            const API_URL = `${API_BASE_URL}/api`;
+            const authHeaders = { 'Authorization': `Bearer ${authToken}` };
+            const formatRupiah = (number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+
+            async function generateReport() {
+                try {
+                    // Membaca parameter filter dari URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const reportParams = {
+                        year: urlParams.get('year') || '',
+                        month: urlParams.get('month') || '',
+                        jenis: urlParams.get('jenis') || '',
+                        kategori: urlParams.get('kategori') || ''
+                    };
+                    const apiParams = new URLSearchParams(reportParams);
+
+                    // Mengambil data dengan filter
+                    const [saldoRes, transRes] = await Promise.all([
+                        fetch(`${API_URL}/saldo?${apiParams.toString()}`, { headers: authHeaders }),
+                        fetch(`${API_URL}/transaksi?${apiParams.toString()}`, { headers: authHeaders })
+                    ]);
+
+                    if (!saldoRes.ok || !transRes.ok) throw new Error('Gagal mengambil data laporan.');
+
+                    const saldo = await saldoRes.json();
+                    const transactions = await transRes.json();
+                    
+                    document.getElementById('total-pemasukan').textContent = formatRupiah(saldo.total_pemasukan);
+                    document.getElementById('total-pengeluaran').textContent = formatRupiah(saldo.total_pengeluaran);
+                    document.getElementById('saldo-akhir').textContent = formatRupiah(saldo.saldo_akhir);
+
+                    // Membuat judul laporan yang dinamis
+                    const months = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+                    let periodText = 'Laporan Keuangan';
+                    if (reportParams.month) periodText += ` Bulan ${months[parseInt(reportParams.month)]}`;
+                    if (reportParams.year) periodText += ` Tahun ${reportParams.year}`;
+                    if (!reportParams.month && !reportParams.year) periodText += ' Keseluruhan';
+                    if (reportParams.jenis) periodText += ` (Jenis: ${reportParams.jenis})`;
+                    if (reportParams.kategori) periodText += ` (Kategori: ${reportParams.kategori})`;
+                    document.getElementById('report-period').textContent = periodText;
+
+
+                    const tableBody = document.getElementById('transaction-table-body');
+                    tableBody.innerHTML = '';
+                     if (transactions.length === 0) {
+                        tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-10">Tidak ada data untuk periode ini.</td></tr>`;
+                    } else {
+                        transactions.forEach(tx => {
+                            const row = document.createElement('tr');
+                            const pemasukan = tx.jenis === 'pemasukan' ? formatRupiah(tx.jumlah) : '-';
+                            const pengeluaran = tx.jenis === 'pengeluaran' ? formatRupiah(tx.jumlah) : '-';
+                            row.innerHTML = `
+                                <td class="px-4 py-2 whitespace-nowrap text-sm">${new Date(tx.tanggal).toLocaleDateString('id-ID')}</td>
+                                <td class="px-4 py-2 text-sm">${tx.keterangan}</td>
+                                <td class="px-4 py-2 whitespace-nowrap text-sm">${tx.kategori || '-'}</td>
+                                <td class="px-4 py-2 whitespace-nowrap text-sm text-right text-green-600">${pemasukan}</td>
+                                <td class="px-4 py-2 whitespace-nowrap text-sm text-right text-red-600">${pengeluaran}</td>
+                            `;
+                            tableBody.appendChild(row);
+                        });
+                    }
+                    
+                    setTimeout(() => window.print(), 500); // Beri sedikit jeda agar konten sempat dirender
+
+                } catch (error) {
+                    console.error('Error generating report:', error);
+                    document.body.innerHTML = `<div class="text-center p-10 text-red-600">Gagal membuat laporan. Pastikan Anda sudah login dan server berjalan.</div>`;
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', generateReport);
+        }
+    </script>
+</body>
+</html>
+

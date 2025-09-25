@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Keuangan Masjid</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- BARU: Menambahkan Google Font untuk footer -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.unsplash.com/photo-1585265763023-3a1371PA248A?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        /* BARU: Style untuk footer watermark */
+        .watermark-footer {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800">Laporan Keuangan Masjid</h1>
+            <p class="text-gray-600 mt-2">Informasi transparansi saldo dan transaksi keuangan untuk jamaah.</p>
+        </header>
+
+        <!-- Filter Section -->
+        <div class="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg border mb-8">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">Filter Laporan</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div>
+                    <label for="filter-year" class="text-sm font-medium text-gray-600">Tahun</label>
+                    <select id="filter-year" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"></select>
+                </div>
+                <div>
+                    <label for="filter-month" class="text-sm font-medium text-gray-600">Bulan</label>
+                    <select id="filter-month" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500">
+                        <option value="">Semua Bulan</option>
+                        <option value="1">Januari</option>
+                        <option value="2">Februari</option>
+                        <option value="3">Maret</option>
+                        <option value="4">April</option>
+                        <option value="5">Mei</option>
+                        <option value="6">Juni</option>
+                        <option value="7">Juli</option>
+                        <option value="8">Agustus</option>
+                        <option value="9">September</option>
+                        <option value="10">Oktober</option>
+                        <option value="11">November</option>
+                        <option value="12">Desember</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="filter-jenis" class="text-sm font-medium text-gray-600">Jenis</label>
+                    <select id="filter-jenis" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500">
+                        <option value="">Semua Jenis</option>
+                        <option value="pemasukan">Pemasukan</option>
+                        <option value="pengeluaran">Pengeluaran</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="filter-kategori" class="text-sm font-medium text-gray-600">Kategori</label>
+                    <input type="text" id="filter-kategori" placeholder="Cari kategori..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500">
+                </div>
+                <div class="flex items-end">
+                    <button id="reset-filter-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg w-full transition-colors">Reset</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Ringkasan Saldo -->
+        <div id="summary" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg border text-center">
+                <h3 class="text-lg font-semibold text-gray-500">Total Pemasukan</h3>
+                <p id="total-pemasukan" class="text-3xl font-bold text-green-600 mt-2">Rp 0</p>
+            </div>
+            <div class="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg border text-center">
+                <h3 class="text-lg font-semibold text-gray-500">Total Pengeluaran</h3>
+                <p id="total-pengeluaran" class="text-3xl font-bold text-red-600 mt-2">Rp 0</p>
+            </div>
+            <div class="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg border text-center">
+                <h3 class="text-lg font-semibold text-gray-500">Saldo Akhir</h3>
+                <p id="saldo-akhir" class="text-3xl font-bold text-blue-600 mt-2">Rp 0</p>
+            </div>
+        </div>
+
+        <!-- Tabel Transaksi -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50/50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Keterangan</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Jumlah</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Bukti</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transaction-table-body" class="bg-white divide-y divide-gray-200">
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000';
+        const API_URL = `${API_BASE_URL}/api/public`;
+
+        const formatRupiah = (number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+
+        const yearFilter = document.getElementById('filter-year');
+        const monthFilter = document.getElementById('filter-month');
+        const jenisFilter = document.getElementById('filter-jenis');
+        const kategoriFilter = document.getElementById('filter-kategori');
+        const resetBtn = document.getElementById('reset-filter-btn');
+
+        function initializeFilters() {
+            const currentYear = new Date().getFullYear();
+            for (let i = currentYear + 1; i >= 2020; i--) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                yearFilter.appendChild(option);
+            }
+            yearFilter.value = currentYear;
+        }
+
+        async function applyFilters() {
+            const params = new URLSearchParams();
+            if (yearFilter.value) params.append('year', yearFilter.value);
+            if (monthFilter.value) params.append('month', monthFilter.value);
+            if (jenisFilter.value) params.append('jenis', jenisFilter.value);
+            if (kategoriFilter.value) params.append('kategori', kategoriFilter.value);
+            
+            const queryString = params.toString();
+            fetchTransactions(queryString);
+            fetchSaldo(queryString);
+        }
+
+        async function fetchTransactions(queryString = '') {
+            try {
+                const response = await fetch(`${API_URL}/transaksi?${queryString}`);
+                if (!response.ok) throw new Error('Gagal mengambil data transaksi.');
+                const transactions = await response.json();
+                const tableBody = document.getElementById('transaction-table-body');
+                tableBody.innerHTML = '';
+                 if(transactions.length === 0){
+                    tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-gray-500">Tidak ada data untuk filter yang dipilih.</td></tr>`
+                }
+                transactions.forEach(tx => {
+                    const row = document.createElement('tr');
+                    const jumlahClass = tx.jenis === 'pemasukan' ? 'text-green-600' : 'text-red-600';
+                    const sign = tx.jenis === 'pemasukan' ? '+' : '-';
+                    const buktiCell = tx.bukti_foto_url 
+                        ? `<a href="${API_BASE_URL}/${tx.bukti_foto_url}" target="_blank" class="text-teal-600 hover:underline">Lihat</a>`
+                        : '<span class="text-gray-400">-</span>';
+
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${new Date(tx.tanggal).toLocaleDateString('id-ID')}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${tx.keterangan}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-semibold ${jumlahClass}">${sign} ${formatRupiah(tx.jumlah)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center">${buktiCell}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching transactions:', error);
+                const tableBody = document.getElementById('transaction-table-body');
+                tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-red-500">Gagal memuat data. Pastikan server berjalan.</td></tr>`;
+            }
+        }
+
+        async function fetchSaldo(queryString = '') {
+            try {
+                const response = await fetch(`${API_URL}/saldo?${queryString}`);
+                if (!response.ok) throw new Error('Gagal mengambil saldo');
+                const saldo = await response.json();
+                document.getElementById('total-pemasukan').textContent = formatRupiah(saldo.total_pemasukan);
+                document.getElementById('total-pengeluaran').textContent = formatRupiah(saldo.total_pengeluaran);
+                document.getElementById('saldo-akhir').textContent = formatRupiah(saldo.saldo_akhir);
+            } catch (error) {
+                console.error('Error fetching saldo:', error);
+            }
+        }
+
+        yearFilter.addEventListener('change', applyFilters);
+        monthFilter.addEventListener('change', applyFilters);
+        jenisFilter.addEventListener('change', applyFilters);
+        kategoriFilter.addEventListener('input', applyFilters);
+        
+        resetBtn.addEventListener('click', () => {
+            yearFilter.value = new Date().getFullYear();
+            monthFilter.value = "";
+            jenisFilter.value = "";
+            kategoriFilter.value = "";
+            applyFilters();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeFilters();
+            applyFilters();
+        });
+    </script>
+
+    <footer class="text-center py-6 text-gray-500 text-sm watermark-footer">
+        <p>&copy; 2025 | created by @elinf_zubs</p>
+    </footer>
+</body>
+</html>
+
