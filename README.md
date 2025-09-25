@@ -30,12 +30,23 @@ Berikut adalah langkah-langkah untuk menjalankan proyek ini di lingkungan lokal.
 - PostgreSQL
 ### 1. Clone Repository
 git clone [https://github.com/username-anda/nama-repository.git](https://github.com/username-anda/nama-repository.git)
-cd nama-repository ```
+```
+cd nama-repository
+ ```
 ### 2. Install Dependensi Backend
 Buka terminal di folder proyek dan jalankan:
-npm install ```
-### 3. Konfigurasi DatabaseBuka psql atau alat bantu database Anda.Buat database baru:CREATE DATABASE db_keuangan_masjid;
-Hubungkan ke database tersebut (\c db_keuangan_masjid) dan jalankan skrip SQL di bawah ini untuk membuat semua tabel yang dibutuhkan:CREATE TABLE transaksi (
+```
+npm install
+```
+### 3. Konfigurasi Database
+Buka ``` psql ``` atau alat bantu database Anda.
+Buat database baru:
+```
+CREATE DATABASE db_keuangan_masjid;
+```
+Hubungkan ke database tersebut (\c db_keuangan_masjid) dan jalankan skrip SQL di bawah ini untuk membuat semua tabel yang dibutuhkan:
+```
+CREATE TABLE transaksi (
     id SERIAL PRIMARY KEY,
     tanggal DATE NOT NULL DEFAULT CURRENT_DATE,
     keterangan VARCHAR(255) NOT NULL,
@@ -56,7 +67,12 @@ CREATE TABLE kegiatan (
     keterangan TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
-4. Konfigurasi EnvironmentBuat file baru di folder utama proyek bernama .env.Salin konten di bawah ini ke dalam file .env dan sesuaikan dengan konfigurasi lokal Anda, terutama DB_PASSWORD.# Konfigurasi Database
+```
+### 4. Konfigurasi Environment
+1. Buat file baru di folder utama proyek bernama .env.
+2. Salin konten di bawah ini ke dalam file .env dan sesuaikan dengan konfigurasi lokal Anda, terutama DB_PASSWORD.
+```
+# Konfigurasi Database
 DB_USER=postgres
 DB_HOST=localhost
 DB_NAME=db_keuangan_masjid
@@ -67,5 +83,10 @@ DB_PORT=5432
 JWT_SECRET=rahasia-super-aman-yang-harus-diganti
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=password123
-5. Jalankan ServerSetelah semua konfigurasi selesai, jalankan server backend dengan perintah:node server.js
-Server akan berjalan di http://localhost:3000.6. Akses AplikasiHalaman Login Admin: Buka file login.html di browser Anda.Halaman Publik: Buka file user-view.html di browser.📝 Lisensi & KreditDibuat dengan ❤️ oleh @elinf_zub © 2025.
+```
+### 5. Jalankan Server
+Setelah semua konfigurasi selesai, jalankan server backend dengan perintah:node server.js
+Server akan berjalan di http://localhost:3000.
+### 6. Akses Aplikas
+Halaman Login Admin: Buka file login.html di browser Anda.Halaman Publik: Buka file user-view.html di browser.
+### 📝 Lisensi & KreditDibuat dengan ❤️ oleh @elinf_zub © 2025.
