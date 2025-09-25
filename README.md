@@ -13,8 +13,8 @@ Aplikasi ini dibagi menjadi dua bagian utama: Halaman Admin yang aman dan Halama
 - 📈 Grafik Dinamis: Visualisasi pemasukan dan pengeluaran bulanan yang interaktif dan mengikuti filter.
 - 🖨️ Cetak Laporan: Mencetak laporan keuangan yang rapi sesuai dengan filter yang sedang aktif.
 - 🗓️ Manajemen Program Kegiatan:
-- Operasi CRUD (Tambah, Edit, Hapus) untuk semua jadwal kegiatan masjid.
-- Mencatat detail seperti nama acara, tanggal, waktu, pembicara, dan keterangan.
+  - Operasi CRUD (Tambah, Edit, Hapus) untuk semua jadwal kegiatan masjid.
+  - Mencatat detail seperti nama acara, tanggal, waktu, pembicara, dan keterangan.
 ## Halaman Publik (Jamaah)
 - 🔒 Read-Only: Tampilan yang aman, hanya untuk melihat data tanpa bisa mengubahnya.
 - 🧾 Laporan Keuangan Transparan: Menampilkan ringkasan saldo dan daftar semua transaksi.
