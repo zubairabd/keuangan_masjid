@@ -29,11 +29,12 @@ Berikut adalah langkah-langkah untuk menjalankan proyek ini di lingkungan lokal.
 - Node.js (v18 atau lebih baru)
 - PostgreSQL
 ### 1. Clone Repository
- ``` git clone [https://github.com/username-anda/nama-repository.git](https://github.com/username-anda/nama-repository.git)
+git clone [https://github.com/username-anda/nama-repository.git](https://github.com/username-anda/nama-repository.git)
 cd nama-repository ```
-### 2.Install Dependensi Backend
-Buka terminal di folder proyek dan jalankan:npm install
-4. Konfigurasi DatabaseBuka psql atau alat bantu database Anda.Buat database baru:CREATE DATABASE db_keuangan_masjid;
+### 2. Install Dependensi Backend
+Buka terminal di folder proyek dan jalankan:
+npm install ```
+### 3. Konfigurasi DatabaseBuka psql atau alat bantu database Anda.Buat database baru:CREATE DATABASE db_keuangan_masjid;
 Hubungkan ke database tersebut (\c db_keuangan_masjid) dan jalankan skrip SQL di bawah ini untuk membuat semua tabel yang dibutuhkan:CREATE TABLE transaksi (
     id SERIAL PRIMARY KEY,
     tanggal DATE NOT NULL DEFAULT CURRENT_DATE,
