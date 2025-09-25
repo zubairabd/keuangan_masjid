@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIMM - Showcase Interaktif</title>
+    
+    <!-- Chosen Palette: Teal and Slate -->
+    <!-- Application Structure Plan: Aplikasi ini dirancang sebagai simulasi dasbor interaktif dalam satu halaman (SPA) untuk mendemonstrasikan fitur-fitur yang dijelaskan dalam laporan README. Arsitekturnya menggunakan sidebar navigasi tetap untuk beralih antar "halaman" (div konten yang ditampilkan/disembunyikan). Halaman-halaman ini mencakup "Tentang Proyek", "Manajemen Keuangan" (Admin), "Program Kegiatan" (Admin), dan "Tampilan Publik". Struktur ini dipilih untuk memberikan alur eksplorasi yang logis dan intuitif, memungkinkan pengguna untuk merasakan fungsionalitas aplikasi PIMM secara langsung melalui data simulasi dan interaksi client-side, tanpa memerlukan backend sungguhan. -->
+    <!-- Visualization & Content Choices: 
+        - Laporan Info: Tren keuangan bulanan -> Goal: Membandingkan perubahan -> Viz/Presentation: Grafik Batang (Chart.js Canvas) -> Interaction: Filter berdasarkan tahun akan memperbarui data dan judul grafik -> Justification: Visualisasi bar chart efektif untuk perbandingan data bulanan. Interaktivitas filter memungkinkan analisis mendalam.
+        - Laporan Info: Daftar transaksi & kegiatan -> Goal: Mengorganisir & menginformasikan detail -> Viz/Presentation: Tabel HTML Interaktif (Tailwind) -> Interaction: Filter akan menyaring baris tabel. Tombol aksi (CRUD) akan menampilkan modal penjelasan. -> Justification: Tabel sangat baik untuk data terstruktur. Simulasi CRUD melalui modal memberikan pemahaman fungsionalitas tanpa kompleksitas backend.
+        - Laporan Info: Deskripsi proyek & teknologi -> Goal: Menginformasikan -> Viz/Presentation: Blok Teks & Ikon (HTML/Unicode) -> Interaction: Statis -> Justification: Presentasi yang jelas dan mudah dibaca untuk informasi pengantar.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-link.active { background-color: #0d9488; color: white; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .modal { transition: opacity 0.25s ease; }
+        #toast-notification {
+            position: fixed; top: 20px; right: 20px; z-index: 1050;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transform: translateY(-150%); opacity: 0;
+        }
+        #toast-notification.show { transform: translateY(0); opacity: 1; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <div id="toast-notification" class="max-w-xs rounded-lg shadow-lg p-4 text-white"><p id="toast-message"></p></div>
+
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-slate-800 text-slate-200 flex flex-col fixed h-full">
+            <div class="p-6 text-center border-b border-slate-700">
+                <h1 class="text-2xl font-bold text-white">PIMM Showcase</h1>
+                <p class="text-sm text-slate-400">Simulasi Interaktif</p>
+            </div>
+            <nav class="flex-grow p-4">
+                <ul>
+                    <li><a href="#about" data-content="content-about" class="sidebar-link flex items-center py-3 px-4 rounded-lg hover:bg-slate-700 transition-colors">✨ Tentang Proyek</a></li>
+                    <li><a href="#admin-keuangan" data-content="content-admin-keuangan" class="sidebar-link flex items-center py-3 px-4 rounded-lg hover:bg-slate-700 transition-colors">💰 Keuangan (Admin)</a></li>
+                    <li><a href="#admin-kegiatan" data-content="content-admin-kegiatan" class="sidebar-link flex items-center py-3 px-4 rounded-lg hover:bg-slate-700 transition-colors">🗓️ Kegiatan (Admin)</a></li>
+                    <li><a href="#public-view" data-content="content-public-view" class="sidebar-link flex items-center py-3 px-4 rounded-lg hover:bg-slate-700 transition-colors">👁️ Tampilan Publik</a></li>
+                </ul>
+            </nav>
+            <div class="p-4 border-t border-slate-700 text-center">
+                <p class="text-xs text-slate-500">Dibuat dengan ❤️ oleh **@elinf_zub** © 2025.</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 ml-64 p-8 overflow-y-auto">
+            
+            <!-- Halaman: Tentang Proyek -->
+            <div id="content-about" class="content-section">
+                <header class="mb-8">
+                    <h1 class="text-4xl font-bold text-slate-900">Sistem Informasi Manajemen Masjid (PIMM)</h1>
+                    <p class="text-slate-600 mt-2">Ini adalah demonstrasi interaktif dari proyek PIMM. Gunakan sidebar untuk menjelajahi berbagai fitur yang dijelaskan dalam laporan proyek.</p>
+                </header>
+                <div class="bg-white p-6 rounded-xl shadow-md border">
+                    <h2 class="text-2xl font-bold mb-4 text-teal-600">Abstrak Proyek</h2>
+                    <p class="text-slate-700">PIMM adalah aplikasi web lengkap yang dirancang untuk membantu pengurus masjid (DKM) dalam mengelola operasional masjid secara digital dan transparan. Aplikasi ini mencakup manajemen keuangan, penjadwalan program kegiatan, dan menyediakan laporan yang dapat diakses oleh jamaah.</p>
+                    <hr class="my-6">
+                    <h2 class="text-2xl font-bold mb-4 text-teal-600">Teknologi yang Digunakan</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div class="p-4 bg-slate-50 rounded-lg">
+                            <span class="text-4xl">📦</span><p class="font-semibold mt-2">Node.js / Express</p><p class="text-xs text-slate-500">Backend</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-lg">
+                            <span class="text-4xl">🗄️</span><p class="font-semibold mt-2">PostgreSQL</p><p class="text-xs text-slate-500">Database</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-lg">
+                             <span class="text-4xl">🎨</span><p class="font-semibold mt-2">HTML & TailwindCSS</p><p class="text-xs text-slate-500">Frontend</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-lg">
+                             <span class="text-4xl">📊</span><p class="font-semibold mt-2">Chart.js</p><p class="text-xs text-slate-500">Grafik</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Halaman: Keuangan (Admin) -->
+            <div id="content-admin-keuangan" class="content-section">
+                <header class="mb-6"><h1 class="text-3xl font-bold text-slate-900">Manajemen Keuangan (Admin)</h1></header>
+                <div class="bg-white p-4 rounded-xl shadow-md border mb-8">
+                    <p class="text-sm text-slate-600 mb-4">Di halaman ini, admin dapat mengelola semua data keuangan. Filter di bawah ini akan secara dinamis memperbarui grafik dan tabel di bawahnya.</p>
+                    <div id="admin-filter-container" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div><label for="admin-filter-year" class="block text-sm font-medium">Tahun</label><select id="admin-filter-year" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm"></select></div>
+                        <div><label for="admin-filter-month" class="block text-sm font-medium">Bulan</label><select id="admin-filter-month" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm"></select></div>
+                        <button id="admin-reset-filter-btn" class="bg-slate-500 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg shadow h-10">Reset Filter</button>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border mb-8">
+                    <h2 class="text-xl font-bold mb-4 text-teal-600">Grafik Keuangan Bulanan</h2>
+                    <div class="chart-container" style="position: relative; height:40vh; width:100%; max-width: 900px; margin: auto;">
+                        <canvas id="financialChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border">
+                    <div class="p-4 flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-teal-600">Detail Transaksi</h2>
+                        <button onclick="showToast('Simulasi: Membuka modal untuk menambah transaksi baru.', 'info')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg shadow">Tambah Transaksi</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200">
+                             <thead class="bg-slate-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Tanggal</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Keterangan</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Jumlah</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase">Aksi</th>
+                                </tr>
+                            </thead>
+                             <tbody id="admin-transaction-table-body" class="bg-white divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Halaman: Kegiatan (Admin) -->
+            <div id="content-admin-kegiatan" class="content-section">
+                <header class="mb-6"><h1 class="text-3xl font-bold text-slate-900">Program Kegiatan (Admin)</h1></header>
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border">
+                    <div class="p-4 flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-teal-600">Daftar Kegiatan</h2>
+                        <button onclick="showToast('Simulasi: Membuka modal untuk menambah kegiatan baru.', 'info')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg shadow">Tambah Kegiatan</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200">
+                             <thead class="bg-slate-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Kegiatan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Jadwal</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Pembicara/PJ</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase">Aksi</th>
+                                </tr>
+                            </thead>
+                             <tbody id="kegiatan-table-body" class="bg-white divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Halaman: Tampilan Publik -->
+            <div id="content-public-view" class="content-section">
+                <header class="mb-6"><h1 class="text-3xl font-bold text-slate-900">Tampilan Publik (Jamaah)</h1></header>
+                 <div class="bg-white p-4 rounded-xl shadow-md border mb-8">
+                    <p class="text-sm text-slate-600 mb-4">Ini adalah simulasi halaman yang dapat diakses publik. Jamaah dapat melihat laporan keuangan yang transparan dan memfilternya sesuai kebutuhan.</p>
+                    <div id="public-filter-container" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                        <div><label for="public-filter-year" class="block text-sm font-medium">Tahun</label><select id="public-filter-year" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm"></select></div>
+                        <div><label for="public-filter-month" class="block text-sm font-medium">Bulan</label><select id="public-filter-month" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm"></select></div>
+                        <div><label for="public-filter-jenis" class="block text-sm font-medium">Jenis</label><select id="public-filter-jenis" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm"><option value="">Semua</option><option value="pemasukan">Pemasukan</option><option value="pengeluaran">Pengeluaran</option></select></div>
+                        <button id="public-reset-filter-btn" class="bg-slate-500 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg shadow h-10">Reset</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md border text-center"><h3 class="text-lg font-semibold text-slate-500">Total Pemasukan</h3><p id="public-total-pemasukan" class="text-3xl font-bold text-green-600 mt-2">Rp 0</p></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border text-center"><h3 class="text-lg font-semibold text-slate-500">Total Pengeluaran</h3><p id="public-total-pengeluaran" class="text-3xl font-bold text-red-600 mt-2">Rp 0</p></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border text-center"><h3 class="text-lg font-semibold text-slate-500">Saldo Akhir</h3><p id="public-saldo-akhir" class="text-3xl font-bold text-blue-600 mt-2">Rp 0</p></div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200">
+                            <thead class="bg-slate-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Tanggal</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Keterangan</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Jumlah</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase">Bukti</th>
+                                </tr>
+                            </thead>
+                            <tbody id="public-transaction-table-body" class="bg-white divide-y divide-slate-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+<script>
+// --- DATA SIMULASI ---
+const mockTransactions = [
+    { id: 1, tanggal: '2025-09-26', keterangan: 'Infaq Jumat Berkah', jumlah: 2500000, jenis: 'pemasukan', kategori: 'Infaq' },
+    { id: 2, tanggal: '2025-09-24', keterangan: 'Pembayaran Listrik & Air', jumlah: 750000, jenis: 'pengeluaran', kategori: 'Operasional' },
+    { id: 3, tanggal: '2025-09-19', keterangan: 'Infaq Jumat', jumlah: 1800000, jenis: 'pemasukan', kategori: 'Infaq' },
+    { id: 4, tanggal: '2025-08-30', keterangan: 'Santunan Anak Yatim', jumlah: 1500000, jenis: 'pengeluaran', kategori: 'Sosial' },
+    { id: 5, tanggal: '2025-08-15', keterangan: 'Donasi Pembangunan TPA', jumlah: 5000000, jenis: 'pemasukan', kategori: 'Donasi' },
+    { id: 6, tanggal: '2025-07-28', keterangan: 'Biaya Kebersihan', jumlah: 300000, jenis: 'pengeluaran', kategori: 'Operasional' },
+    { id: 7, tanggal: '2024-12-20', keterangan: 'Dana Zakat Fitrah', jumlah: 7500000, jenis: 'pemasukan', kategori: 'Zakat' },
+    { id: 8, tanggal: '2024-11-05', keterangan: 'Perbaikan Sound System', jumlah: 2200000, jenis: 'pengeluaran', kategori: 'Perawatan' },
+];
+
+const mockKegiatan = [
+    { id: 1, nama_kegiatan: 'Kajian Subuh Bulanan', tanggal_kegiatan: '2025-10-05', pembicara: 'Ustadz Abdul Somad' },
+    { id: 2, nama_kegiatan: 'Santunan Anak Yatim Piatu', tanggal_kegiatan: '2025-09-30', pembicara: 'Panitia DKM' },
+    { id: 3, nama_kegiatan: 'Peringatan Maulid Nabi Muhammad SAW', tanggal_kegiatan: '2025-09-26', pembicara: 'Habib Syech' },
+];
+
+// --- VARIABEL GLOBAL ---
+let financialChart;
+const toast = document.getElementById('toast-notification');
+const toastMessage = document.getElementById('toast-message');
+let toastTimeout;
+const formatRupiah = (number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+
+// --- FUNGSI UTILITAS ---
+function showToast(message, type = 'success') {
+    clearTimeout(toastTimeout);
+    toastMessage.textContent = message;
+    toast.classList.remove('bg-teal-500', 'bg-red-500', 'bg-blue-500');
+    if (type === 'success') toast.classList.add('bg-teal-500');
+    else if (type === 'error') toast.classList.add('bg-red-500');
+    else toast.classList.add('bg-blue-500');
+    toast.classList.add('show');
+    toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3000);
+}
+
+// --- LOGIKA NAVIGASI ---
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    const contentSections = document.querySelectorAll('.content-section');
+
+    const navigateTo = (hash) => {
+        const targetId = (hash || '#about').substring(1);
+        const targetLink = document.querySelector(`a[href="#${targetId}"]`);
+        if (!targetLink) return;
+
+        const targetContentId = targetLink.dataset.content;
+        
+        contentSections.forEach(section => section.classList.remove('active'));
+        document.getElementById(targetContentId).classList.add('active');
+
+        sidebarLinks.forEach(link => link.classList.remove('active'));
+        targetLink.classList.add('active');
+
+        if (targetContentId === 'content-admin-keuangan') {
+            setupAdminFilters();
+            updateAdminKeuangan();
+        } else if (targetContentId === 'content-public-view') {
+            setupPublicFilters();
+            updatePublicView();
+        } else if (targetContentId === 'content-admin-kegiatan') {
+            renderKegiatanTable();
+        }
+    };
+
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.hash = e.currentTarget.hash;
+        });
+    });
+
+    window.addEventListener('hashchange', () => navigateTo(window.location.hash));
+    navigateTo(window.location.hash);
+});
+
+
+// --- FUNGSI KEUANGAN (ADMIN) ---
+function setupAdminFilters() {
+    const yearSelect = document.getElementById('admin-filter-year');
+    if (yearSelect.options.length > 1) return;
+    const currentYear = new Date().getFullYear();
+    for (let year = currentYear + 1; year >= 2024; year--) yearSelect.add(new Option(year, year));
+    yearSelect.value = currentYear;
+
+    const monthSelect = document.getElementById('admin-filter-month');
+    const months = ["Semua Bulan", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    months.forEach((month, index) => monthSelect.add(new Option(month, index)));
+
+    document.getElementById('admin-filter-container').addEventListener('change', updateAdminKeuangan);
+    document.getElementById('admin-reset-filter-btn').addEventListener('click', () => {
+        yearSelect.value = new Date().getFullYear();
+        monthSelect.value = 0;
+        updateAdminKeuangan();
+    });
+}
+
+function updateAdminKeuangan() {
+    const year = document.getElementById('admin-filter-year').value;
+    const month = document.getElementById('admin-filter-month').value;
+    
+    let filteredData = mockTransactions.filter(tx => {
+        const txDate = new Date(tx.tanggal);
+        const yearMatch = txDate.getFullYear() == year;
+        const monthMatch = month == 0 || (txDate.getMonth() + 1) == month;
+        return yearMatch && monthMatch;
+    });
+
+    renderAdminTransactionTable(filteredData);
+    renderFinancialChart(mockTransactions, year);
+}
+
+function renderFinancialChart(allData, selectedYear) {
+    const ctx = document.getElementById('financialChart').getContext('2d');
+    const labels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+    const pemasukanData = Array(12).fill(0);
+    const pengeluaranData = Array(12).fill(0);
+
+    allData.filter(tx => new Date(tx.tanggal).getFullYear() == selectedYear).forEach(tx => {
+        const monthIndex = new Date(tx.tanggal).getMonth();
+        if (tx.jenis === 'pemasukan') pemasukanData[monthIndex] += tx.jumlah;
+        else pengeluaranData[monthIndex] += tx.jumlah;
+    });
+
+    if (financialChart) financialChart.destroy();
+    financialChart = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets: [
+            { label: 'Pemasukan', data: pemasukanData, backgroundColor: 'rgba(20, 184, 166, 0.7)' },
+            { label: 'Pengeluaran', data: pengeluaranData, backgroundColor: 'rgba(239, 68, 68, 0.7)' }
+        ]},
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { title: { display: true, text: `Ringkasan Keuangan Tahun ${selectedYear}` }, tooltip: { callbacks: { label: c => `${c.dataset.label}: ${formatRupiah(c.raw)}` }}},
+            scales: { y: { beginAtZero: true, ticks: { callback: v => formatRupiah(v) } } }
+        }
+    });
+}
+
+function renderAdminTransactionTable(data) {
+    const tableBody = document.getElementById('admin-transaction-table-body');
+    tableBody.innerHTML = '';
+    if (data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-slate-500">Tidak ada data untuk filter ini.</td></tr>`;
+        return;
+    }
+    data.forEach(tx => {
+        const row = document.createElement('tr');
+        const jumlahClass = tx.jenis === 'pemasukan' ? 'text-green-600' : 'text-red-600';
+        const sign = tx.jenis === 'pemasukan' ? '+' : '-';
+        row.innerHTML = `<td class="px-6 py-4 text-sm">${new Date(tx.tanggal).toLocaleDateString('id-ID')}</td>
+            <td class="px-6 py-4 text-sm font-medium">${tx.keterangan}</td>
+            <td class="px-6 py-4 text-sm text-right font-semibold ${jumlahClass}">${sign} ${formatRupiah(tx.jumlah)}</td>
+            <td class="px-6 py-4 text-sm text-center font-medium">
+                <button onclick="showToast('Simulasi: Membuka modal untuk mengedit data ini.', 'info')" class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                <button onclick="showToast('Simulasi: Menghapus data ini dari database.', 'error')" class="text-red-600 hover:text-red-900">Hapus</button>
+            </td>`;
+        tableBody.appendChild(row);
+    });
+}
+
+// --- FUNGSI KEGIATAN (ADMIN) ---
+function renderKegiatanTable() {
+    const tableBody = document.getElementById('kegiatan-table-body');
+    tableBody.innerHTML = '';
+    mockKegiatan.forEach(kg => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td class="px-6 py-4 text-sm font-medium">${kg.nama_kegiatan}</td>
+            <td class="px-6 py-4 text-sm">${new Date(kg.tanggal_kegiatan).toLocaleDateString('id-ID')}</td>
+            <td class="px-6 py-4 text-sm">${kg.pembicara}</td>
+            <td class="px-6 py-4 text-sm text-center font-medium">
+                <button onclick="showToast('Simulasi: Membuka modal edit kegiatan.', 'info')" class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                <button onclick="showToast('Simulasi: Menghapus kegiatan ini.', 'error')" class="text-red-600 hover:text-red-900">Hapus</button>
+            </td>`;
+        tableBody.appendChild(row);
+    });
+}
+
+// --- FUNGSI TAMPILAN PUBLIK ---
+function setupPublicFilters() {
+    const yearSelect = document.getElementById('public-filter-year');
+    if (yearSelect.options.length > 1) return;
+    const currentYear = new Date().getFullYear();
+    for (let year = currentYear + 1; year >= 2024; year--) yearSelect.add(new Option(year, year));
+    yearSelect.value = currentYear;
+
+    const monthSelect = document.getElementById('public-filter-month');
+    const months = ["Semua Bulan", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    months.forEach((month, index) => monthSelect.add(new Option(month, index)));
+
+    document.getElementById('public-filter-container').addEventListener('change', updatePublicView);
+    document.getElementById('public-reset-filter-btn').addEventListener('click', () => {
+        yearSelect.value = new Date().getFullYear();
+        monthSelect.value = 0;
+        document.getElementById('public-filter-jenis').value = "";
+        updatePublicView();
+    });
+}
+
+function updatePublicView() {
+    const year = document.getElementById('public-filter-year').value;
+    const month = document.getElementById('public-filter-month').value;
+    const jenis = document.getElementById('public-filter-jenis').value;
+    
+    let filteredData = mockTransactions.filter(tx => {
+        const txDate = new Date(tx.tanggal);
+        const yearMatch = txDate.getFullYear() == year;
+        const monthMatch = month == 0 || (txDate.getMonth() + 1) == month;
+        const jenisMatch = jenis === "" || tx.jenis === jenis;
+        return yearMatch && monthMatch && jenisMatch;
+    });
+
+    let totalPemasukan = 0;
+    let totalPengeluaran = 0;
+    filteredData.forEach(tx => {
+        if (tx.jenis === 'pemasukan') totalPemasukan += tx.jumlah;
+        else totalPengeluaran += tx.jumlah;
+    });
+    
+    document.getElementById('public-total-pemasukan').textContent = formatRupiah(totalPemasukan);
+    document.getElementById('public-total-pengeluaran').textContent = formatRupiah(totalPengeluaran);
+    document.getElementById('public-saldo-akhir').textContent = formatRupiah(totalPemasukan - totalPengeluaran);
+    
+    const tableBody = document.getElementById('public-transaction-table-body');
+    tableBody.innerHTML = '';
+    if (filteredData.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-slate-500">Tidak ada data untuk filter ini.</td></tr>`;
+        return;
+    }
+    filteredData.forEach(tx => {
+        const row = document.createElement('tr');
+        const jumlahClass = tx.jenis === 'pemasukan' ? 'text-green-600' : 'text-red-600';
+        row.innerHTML = `<td class="px-6 py-4 text-sm">${new Date(tx.tanggal).toLocaleDateString('id-ID')}</td>
+            <td class="px-6 py-4 text-sm font-medium">${tx.keterangan}</td>
+            <td class="px-6 py-4 text-sm text-right font-semibold ${jumlahClass}">${formatRupiah(tx.jumlah)}</td>
+            <td class="px-6 py-4 text-sm text-center">
+                <a href="#" onclick="showToast('Simulasi: Membuka bukti foto di tab baru.', 'info')" class="text-teal-600 hover:underline">Lihat</a>
+            </td>`;
+        tableBody.appendChild(row);
+    });
+}
+
+</script>
+</body>
+</html>
+
