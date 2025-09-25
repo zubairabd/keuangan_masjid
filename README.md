@@ -7,11 +7,11 @@ Aplikasi ini dibagi menjadi dua bagian utama: Halaman Admin yang aman dan Halama
 - ⏳ Session Timeout: Admin akan otomatis logout setelah 15 menit tidak ada aktivitas untuk keamanan.
 - 📊 Dasbor Multi-Menu: Navigasi menggunakan sidebar untuk beralih antara modul Keuangan dan Kegiatan.
 - 💰 Manajemen Keuangan:
-- Operasi CRUD (Tambah, Edit, Hapus) untuk semua transaksi.
-- 📸 Upload Bukti Foto untuk setiap transaksi sebagai bukti akuntabilitas.
-- 🔍 Filter Transaksi berdasarkan tahun, bulan, jenis, dan kategori.
-- 📈 Grafik Dinamis: Visualisasi pemasukan dan pengeluaran bulanan yang interaktif dan mengikuti filter.
-- 🖨️ Cetak Laporan: Mencetak laporan keuangan yang rapi sesuai dengan filter yang sedang aktif.
+    - Operasi CRUD (Tambah, Edit, Hapus) untuk semua transaksi.
+    - 📸 Upload Bukti Foto untuk setiap transaksi sebagai bukti akuntabilitas.
+    - 🔍 Filter Transaksi berdasarkan tahun, bulan, jenis, dan kategori.
+    - 📈 Grafik Dinamis: Visualisasi pemasukan dan pengeluaran bulanan yang interaktif dan mengikuti filter.
+    - 🖨️ Cetak Laporan: Mencetak laporan keuangan yang rapi sesuai dengan filter yang sedang aktif.
 - 🗓️ Manajemen Program Kegiatan:
   - Operasi CRUD (Tambah, Edit, Hapus) untuk semua jadwal kegiatan masjid.
   - Mencatat detail seperti nama acara, tanggal, waktu, pembicara, dan keterangan.
