@@ -102,5 +102,5 @@ Server akan berjalan di ``` http://localhost:3000 ```.
 ### 6. Akses Aplikasi
 Halaman Login Admin: Buka file ``` login.html ``` di browser Anda.Halaman Publik: Buka file ``` user-view.html ``` di browser.
 ### 7. Testing
-Copy (https://github.com/zubairabd/keuangan_masjid/SHOWCASE.html)
+buka https://onecompiler.com/html , masukkan file pada ``` (https://github.com/zubairabd/keuangan_masjid/SHOWCASE.html) ``` ke dalam editor html onecompiler
 ### 📝 Lisensi & KreditDibuat dengan ❤️ oleh @elinf_zub © 2025.
