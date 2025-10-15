@@ -89,7 +89,7 @@ DB_PASSWORD=your_postgres_password
 DB_PORT=5432
 
 # Konfigurasi Aplikasi & Keamanan
-JWT_SECRET=rahasia-super-aman-yang-harus-diganti
+JWT_SECRET=bebas-ganti
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=password123
 ```
